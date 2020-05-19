@@ -1,10 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.grid')
     let squares = Array.from(document.querySelectorAll('.grid div'))
-    const ScoreDisplay = document.querySelector('#score');
-    const StartButton = document.querySelector('#start-button');
+    const scoreDisplay = document.querySelector('#score');
+    const startButton = document.querySelector('#start-button');
     const width = 10;
     let nextRandom = 0;
+    let timerId
+    let score = 0;
+    const colors = ['orang', 'red','purple','green', 'blue']
     
     //The Tetrominoes
     const lTetrominoe = [
@@ -56,21 +59,22 @@ document.addEventListener('DOMContentLoaded', () => {
     function draw() {
         current.forEach(index => {
             squares[currentPosition + index].classList.add('tetromino')
+            squares[currentPosition + index].style.backgroundColor = colors[random]
         })
     }
     
     // undraw
     function unDraw() {
         current.forEach(index => {
-            squares[currentPosition + index].classList.remove('tetromino') 
+            squares[currentPosition + index].classList.remove('tetromino')
+             squares[currentPosition + index].style.backgroundColor = ''
         })
     }
-    console.log(theTetrominoes[1][3]);
-    draw()
+    
 
 
     //tetromino move down every second
-    timerId = setInterval(moveDown, 1000)
+    // timerId = setInterval(moveDown, 1000)
 
     //keycode 
     function control(e) {
@@ -163,12 +167,24 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         upNextTetrominoes[nextRandom].forEach(index => {
             displaySquare[displayIndex + index].classList.add('tetromino')
+            displaySquares[displayIndex + index].style.backgroundColor = colors[nextRandom];
         })
     }
 
+    
+    startButton.addEventListener('click', () => {
+        if (timerId) {
+            clearInterval(timerId)
+            timerId = null
+        } else {
+            draw()
+            timerId = setInterval(moveDown, 1000)
+            nextRandom = Math.floor(Math.random() * theTetrominoes.length)
+            displayShape()
+        }
 
+    })
 
-
-
+    
 
 });
